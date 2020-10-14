@@ -1,0 +1,4 @@
+001|Lap trinh co ban|4
+002|Dai so tuyen tinh|4
+003|Dinh huong nghe nghiep|2
+005|Co so ki thuat lap trinh voi C#|3
