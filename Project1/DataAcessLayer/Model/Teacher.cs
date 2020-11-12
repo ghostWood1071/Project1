@@ -6,24 +6,42 @@ using System.Threading.Tasks;
 
 namespace Project1.DataAcessLayer.Model
 {
-    class Teacher
+    class Teacher: User
     {
         private string id;
         private string name;
         private string subjectId;
-        private string position; //chức vụ
+        private int position; //chức vụ
 
         public Teacher()
         {
-
+            
         }
 
-        public Teacher(string id, string name, string position, string subjectId)
+        public Teacher(string id, string name, int position, string subjectId)
         {
             this.id = id;
             this.name = name;
             this.position = position;
             this.subjectId = subjectId;
+            this.account = id;
+        }
+
+        public Teacher(string id, string name, int position, string subjectId, int role)
+        {
+            this.id = id;
+            this.name = name;
+            this.position = position;
+            this.subjectId = subjectId;
+            this.account = id;
+            this.role = role;
+        }
+
+        public Teacher(string id, int role)
+        {
+            this.id = id;
+            this.role = role;
+            this.position = role;
         }
 
         public string ID
@@ -44,7 +62,7 @@ namespace Project1.DataAcessLayer.Model
             set { this.name = value; }
         }
 
-        public string Position
+        public int Position
         {
             get { return this.position; }
             set { this.position = value; }

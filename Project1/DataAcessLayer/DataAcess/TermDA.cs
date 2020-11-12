@@ -24,7 +24,7 @@ namespace Project1.DataAcessLayer.DataAcess
                 while (line != null)
                 {
                     string[] info = line.Split('|');
-                    terms.Add(new Term(info[0], info[1], int.Parse(info[2])));
+                    terms.Add(new Term(info[0], info[1], int.Parse(info[2]), info[3]));
                     line = reader.ReadLine();
                 }
                 reader.Close();
@@ -43,7 +43,7 @@ namespace Project1.DataAcessLayer.DataAcess
                 {
                     string line = reader.ReadLine();
                     string[] info = line.Split('|');
-                    terms.Add(new Term(info[0], info[1], int.Parse(info[2])));
+                    terms.Add(new Term(info[0], info[1], int.Parse(info[2]), info[3]));
                 }
                 reader.Close();
                 return terms;
@@ -57,7 +57,7 @@ namespace Project1.DataAcessLayer.DataAcess
             using (StreamWriter writer = new StreamWriter(fileName))
             {
                 foreach (var Term in terms)
-                    writer.WriteLine(Term.ID + "|" + Term.Name + "|" + Term.CreditNum);
+                    writer.WriteLine(Term.ID + "|" + Term.Name + "|" + Term.CreditNum +"|"+Term.SubjectId);
                 writer.Flush();
                 writer.Close();
             }
@@ -67,7 +67,7 @@ namespace Project1.DataAcessLayer.DataAcess
         {
             using (StreamWriter writer = new StreamWriter(fileName, true, Encoding.UTF8))
             {
-                writer.WriteLine(Term.ID + "|" + Term.Name + "|" + Term.CreditNum);
+                writer.WriteLine(Term.ID + "|" + Term.Name + "|" + Term.CreditNum+"|"+Term.SubjectId);
                 writer.Flush();
                 writer.Close();
             }

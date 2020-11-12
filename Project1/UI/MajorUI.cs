@@ -1,5 +1,6 @@
 ﻿using Project1.DataAcessLayer.DataAcess;
 using Project1.DataAcessLayer.Model;
+using Project1.DataAcessLayer.Model.Interface;
 using Project1.LogicalHandlerLayer;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Project1.UI
 {
-    class MajorUI
+    class MajorUI: IUIable
     {
         MajorHandler majorHandler = new MajorHandler();
         SubjectHandler subjectHandler = new SubjectHandler();
@@ -37,13 +38,13 @@ namespace Project1.UI
                         switch (mode)
                         {
                             case 1:
-                                AddMajor();
+                                Add();
                                 break;
                             case 2:
-                                UpdateMajor();
+                                Update();
                                 break;
                             case 3:
-                                DeleteMajor();
+                                Delete();
                                 break;
                             case 4:
                                 Show();
@@ -63,7 +64,7 @@ namespace Project1.UI
             }
         }
 
-        private void Search()
+        public void Search()
         {
             List<Major> majors = majorHandler.GetMajors();
             List<Subject> subjects = subjectHandler.GetSubjects();
@@ -82,20 +83,20 @@ namespace Project1.UI
             }
         }
 
-        private void Show()
+        public void Show()
         {
             List<Major> majors = majorHandler.GetMajors();
             foreach (var major in majors)
                 Console.WriteLine(major.ID + "|" + major.Name + "|" + major.SubjectID);
         }
 
-        private void DeleteMajor()
+        public void Delete()
         {
             string id = GetId2("Mã chuyên ngành");
             majorHandler.DeleteMajor(id);
         }
 
-        private void UpdateMajor()
+        public void Update()
         {
             string id = GetId2("Mã chuyên ngành");
             string name = GetName(true);
@@ -119,7 +120,7 @@ namespace Project1.UI
             majorHandler.UpdateMajor(id, newInfo);
         }
 
-        public void AddMajor()
+        public void Add()
         {
             bool exit = false;
             while (!exit)

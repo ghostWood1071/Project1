@@ -1,5 +1,7 @@
 ﻿using Project1.DataAcessLayer.Model;
+using Project1.DataAcessLayer.Model.Interface;
 using Project1.LogicalHandlerLayer;
+using Project1.UI.Component;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,59 +11,59 @@ using System.Threading.Tasks;
 
 namespace Project1.UI
 {
-    class SubjectUI
+    class SubjectUI:IUIable
     {
         SubjectHandler handler = new SubjectHandler();
         public void Menu()
         {
+            Console.Clear();
             Console.OutputEncoding = Encoding.UTF8;
+            string[] menu =
+            {
+               "1.Thêm bộ môn mới",
+               "2.Sửa thông tin bộ môn",
+                "3.Xóa bộ môn",
+                "4.Hiển thị danh sách bộ môn",
+                "5.Tìm kiếm bộ môn",
+                "6.Trở lại trang chủ",
+            };
+            MenuSelector menuSelector = new MenuSelector(menu, "Quản lý bộ môn");
             bool exit = false;
             while (!exit)
             {
-                Console.WriteLine("Quản lý bộ môn");
-                Console.WriteLine("1.Thêm bộ môn mới");
-                Console.WriteLine("2.Sửa thông tin bộ môn");
-                Console.WriteLine("3.Xóa bộ môn");
-                Console.WriteLine("4.Hiển thị danh sách bộ môn");
-                Console.WriteLine("5.Tìm kiếm bộ môn");
-                Console.WriteLine("6.Trở lại trang chủ");
-                Console.WriteLine("Bạn chọn chế độ: ");
-                try
-                {
-                    int mode = int.Parse(Console.ReadLine());
-                    if(mode<=0)
-                        Console.WriteLine("Bạn chọn chế độ từ 0-6");
-                    else
+                int mode = menuSelector.Selector();
                     switch (mode)
                     {
                         case 1:
-                            AddSubject();
+                            Add();
+                            Console.Clear();
                             break;
                         case 2:
-                            UpdateSubject();
+                            Update();
+                            Console.Clear();
                             break;
                         case 3:
-                            DeleteSubject();
+                            Delete();
+                            Console.Clear();
                             break;
                         case 4:
                             Show();
+                            Console.Clear();
                             break;
                         case 5:
                             Search();
+                            Console.Clear();
                             break;
                         case 6:
                             exit = true;
+                            Console.Clear();
                             break;
                     }
-                }
-                catch
-                {
-                    Console.WriteLine("Bạn chọn chế độ từ 0-6");
-                }
+                
             }
         }
 
-        public void AddSubject()
+        public void Add()
         {
             bool exit = false;
             while (!exit)
@@ -123,7 +125,7 @@ namespace Project1.UI
             }
         }
 
-        public void UpdateSubject()
+        public void Update()
         {
             List<Subject> subjects = handler.GetSubjects();
             string id = GetId2();
@@ -142,7 +144,7 @@ namespace Project1.UI
             handler.UpdateSubject(id, newInfo);
         }
 
-        public void DeleteSubject()
+        public void Delete()
         {
             string id = GetId2();
             handler.DeleteSubject(id);
@@ -163,6 +165,11 @@ namespace Project1.UI
             List<Subject> subjects = handler.GetSubjects();
             foreach (var sub in subjects)
                     Console.WriteLine(sub.ID + "|" + sub.Name);
+        }
+
+        public void PrintTable(List<Subject> subjecs)
+        {
+
         }
     }
 }

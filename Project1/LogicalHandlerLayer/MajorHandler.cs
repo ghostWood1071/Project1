@@ -2,9 +2,6 @@
 using Project1.DataAcessLayer.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project1.LogicalHandlerLayer
 {
@@ -17,6 +14,26 @@ namespace Project1.LogicalHandlerLayer
         public List<Major> GetMajors()
         {
             return majorDA.GetListMajor();
+        }
+
+        public List<Major> GetMajors(string subId)
+        {
+            List<Major> majors = GetMajors();
+            List<Major> result = new List<Major>();
+            foreach(Major major in majors)
+            {
+                if (major.SubjectID == subId)
+                    result.Add(major);
+            }
+            return result;
+        }
+
+        public Major GetMajor(string id, List<Major> majors)
+        {
+            foreach (var major in majors)
+                if (major.ID == id)
+                    return major;
+            return null;
         }
 
         public void SaveAll(List<Major> majors)

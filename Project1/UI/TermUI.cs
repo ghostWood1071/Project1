@@ -1,80 +1,104 @@
 ﻿using Project1.DataAcessLayer.Model;
+using Project1.DataAcessLayer.Model.Interface;
 using Project1.LogicalHandlerLayer;
+using Project1.Source;
+using Project1.UI.Component;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Project1.UI
 {
-    class TermUI
+    class TermUI : IUIable
     {
         TermsHandler handler = new TermsHandler();
+        SubjectHandler subjectHandler = new SubjectHandler();
+
+        private Teacher teacher;
+
+        public TermUI()
+        {
+
+        }
+
+        public TermUI(Teacher teacher)
+        {
+            this.teacher = teacher;
+        }
+
         public void Menu()
         {
+            Console.Clear();
+            string[] menu = {
+                "1.Thêm học phần mới",
+                "2.Sửa thông tin học phần",
+                "3.Xóa học phần",
+                "4.Tìm kiếm học phần",
+                "5.Hiển thị tất cả học phần",
+                "6.Quay lại trang chủ"
+            };
+            MenuSelector menuSelector = new MenuSelector(menu, "Quản lý học phần");
             Console.OutputEncoding = Encoding.UTF8;
             bool exit = false;
             while (!exit)
             {
-                Console.WriteLine("Quản lý học phần");
-                Console.WriteLine("1.Thêm học phần mới");
-                Console.WriteLine("2.Sửa thông tin học phần");
-                Console.WriteLine("3.Xóa học phần");
-                Console.WriteLine("4.Tìm kiếm học phần");
-                Console.WriteLine("5.Hiển thị tất cả học phần");
-                Console.WriteLine("6.Hiển thị thông tin học phần");
-                Console.WriteLine("7.Quay lại trang chủ");
-                Console.Write("Bạn chọn chế độ: ");
-                try
+
+                int mode = menuSelector.Selector();
+                switch (mode)
                 {
-                    int mode = int.Parse(Console.ReadLine());
-                    if (mode <= 0)
-                        Console.WriteLine("Chế độ là các số từ 1-7");
-                    switch (mode)
-                    {
-                        case 1:
-                            AddTerm();
-                            break;
-                        case 2:
-                            UpdateTerm();
-                            break;
-                        case 3:
-                            DeleteTerm();
-                            break;
-                        case 4:
-                            SearchTerm();
-                            break;
-                        case 5:
-                            ShowAll();
-                            break;
-                        case 6:
-                            Show();
-                            break;
-                        case 7:
-                            exit = true;
-                            break;
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Chế độ là các số từ 1-7");
+                    case 0:
+                        Add();
+                        Console.Clear();
+                        break;
+                    case 1:
+                        Update();
+                        Console.Clear();
+                        break;
+                    case 2:
+                        Delete();
+                        Console.Clear();
+                        break;
+                    case 3:
+                        Search();
+                        Console.Clear();
+                        break;
+                    case 4:
+                        ShowAll();
+                        Console.Clear();
+                        break;
+                    case 5:
+                        exit = true;
+                        Console.Clear();
+                        break;
                 }
             }
         }
 
-        public void AddTerm()
+        public void Add()
         {
+            Console.Clear();
+            Console.CursorVisible = true;
+            List<Term> terms = this.teacher.Role == (int)UserPermission.HeadSection ? handler.GetList(this.teacher.SubjectID) : handler.GetListTerm();
+
             bool exit = false;
             while (!exit)
             {
-                handler.AddTerm(new Term(GetId(), GetName(), GetCreditNum()));
+                PrintTable(terms);
+                string id = GetId();
+                string name = GetName();
+                int creditNum = GetCreditNum();
+                string subId = this.teacher.Role == (int)UserPermission.HeadSection ? this.teacher.SubjectID : GetSubId();
+                Term term = new Term(id,name,creditNum,subId);
+                handler.AddTerm(term);
+                terms.Add(term);
+                PrintTable(terms);
                 Console.Write("Bạn muốn nhập tiếp không?(y/n): ");
                 string e = Console.ReadLine();
                 if (e == "n")
                     exit = true;
             }
-        }
+            Console.CursorVisible = false;
+        } //checked
 
         public string GetId()
         {
@@ -107,6 +131,17 @@ namespace Project1.UI
                 else
                     return id;
             }
+        }
+
+        public string GetSubId()
+        {
+            Console.Clear();
+            List<Subject> subjects = subjectHandler.GetSubjects();
+            string[] selectItem = new string[subjects.Count];
+            for (int i = 0; i < subjects.Count; i++)
+                selectItem[i] = subjects[i].Name;
+            MenuSelector selector = new MenuSelector(selectItem, "Bộ môn: ");
+            return subjects[selector.Selector()].ID;
         }
 
         public string GetName(bool acceptNull = false)
@@ -146,76 +181,148 @@ namespace Project1.UI
             }
         }
 
-        public void UpdateTerm()
+        public void Update()
         {
-            string id = GetId2();
-            string name = GetName(true);
-            int creditNum = GetCreditNum(true);
-            Term newInfo = new Term();
-            Term oldInfo = handler.GetListTerm()[handler.GetTermIndex(id)];
-
-            newInfo.ID = id;
-
-            if (name == "")
-                newInfo.Name = oldInfo.Name;
-            else
-                newInfo.Name = name;
-
-            if (creditNum == 0)
-                newInfo.CreditNum = oldInfo.CreditNum;
-            else
-                newInfo.CreditNum = creditNum;
-
-            handler.UpdateTerm(id, newInfo);
-        }
-
-        public void DeleteTerm()
-        {
-            string id = GetId2();
-            handler.DeleteTerm(id);
-        }
-
-        public void SearchTerm()
-        {
-            List<Term> rooms = handler.GetListTerm();
-            string searcher = Console.ReadLine();
-            foreach (var room in rooms)
+            bool exit = false;
+            List<Term> terms = this.teacher.Role == (int)UserPermission.HeadSection ? handler.GetList(this.teacher.SubjectID) : handler.GetListTerm();
+            while (!exit)
             {
-                if (room.ID.Contains(searcher) || room.Name.Contains(searcher) || room.CreditNum.ToString().Contains(searcher))
-                    Console.WriteLine(room.ID + "|" + room.Name + "|" + room.CreditNum);
+                Console.CursorVisible = true;
+                Console.Clear();
+                PrintTable(terms);
+                string id = GetId2();
+                string name = GetName(true);
+                int creditNum = GetCreditNum(true);
+                string subId = this.teacher.Role == (int)UserPermission.HeadSection ? this.teacher.SubjectID : GetSubId();
+                Term newInfo = new Term();
+                Term oldInfo = handler.GetTerm(id, terms);
+
+                newInfo.ID = id;
+
+                if (name == "")
+                    newInfo.Name = oldInfo.Name;
+                else
+                    newInfo.Name = name;
+
+                if (creditNum == 0)
+                    newInfo.CreditNum = oldInfo.CreditNum;
+                else
+                    newInfo.CreditNum = creditNum;
+
+                if (subId == "")
+                    newInfo.SubjectId = oldInfo.SubjectId;
+                else
+                    newInfo.SubjectId = subId;
+
+                handler.UpdateTerm(id, newInfo);
+                terms[handler.GetIndex(oldInfo.ID, terms)] = newInfo;
+
+                Console.Clear();
+                PrintTable(terms);
+                Console.Write("Bạn có muốn sửa tiếp không?(nhấn esc để thoát)");
+                ConsoleKeyInfo info = Console.ReadKey();
+                if (info.Key == ConsoleKey.Escape)
+                    exit = true;
             }
-        }
+        } //checked
+
+        public void Delete()
+        {
+            AssignmentHandler assignmentHandler = new AssignmentHandler();
+            bool exit = false;
+            while (!exit)
+            {
+                List<Term> terms = this.teacher.Role == (int)UserPermission.HeadSection ? handler.GetList(this.teacher.SubjectID) : handler.GetListTerm();
+                PrintTable(terms);
+                string id = GetId2();
+                handler.DeleteTerm(id);
+                terms.RemoveAt(handler.GetIndex(id, terms));
+                assignmentHandler.Delete(assignment => assignment.TermID == id);
+                PrintTable(terms);
+                Console.Clear();
+                PrintTable(terms);
+                Console.Write("Bạn có muốn sửa tiếp không?(nhấn esc để thoát)");
+                ConsoleKeyInfo info = Console.ReadKey();
+                if (info.Key == ConsoleKey.Escape)
+                    exit = true;
+            }
+        }  //checked
+
+        public void Search()
+        {
+
+            bool exit = false;
+            while (!exit)
+            {
+                Console.Clear();
+                Console.CursorVisible = true;
+                List<Term> rooms = this.teacher.Role == (int)UserPermission.HeadSection ? handler.GetList(this.teacher.SubjectID) : handler.GetListTerm();
+                List<Subject> subjects = subjectHandler.GetSubjects();
+                Console.Write("Từ khóa: ");
+                string searcher = Console.ReadLine();
+                Table table = new Table(100);
+                table.PrintLine();
+                table.PrintRow("ID", "Ten HP", "so tin chi", "bo mon");
+                table.PrintLine();
+                for (int i = 0; i < rooms.Count; i++)
+                {
+                    if (rooms[i].ID.Contains(searcher) ||
+                        rooms[i].Name.Contains(searcher) ||
+                        rooms[i].SubjectId.Contains(searcher) ||
+                        rooms[i].CreditNum.ToString().Contains(searcher))
+
+                        table.PrintRow(
+                        rooms[i].ID,
+                        rooms[i].Name,
+                        rooms[i].CreditNum.ToString(),
+                        subjects[subjectHandler.GetSubIndex(rooms[i].SubjectId)].Name
+                    );
+                }
+                table.PrintLine();
+                Console.Write("Nhấn esc để thoát");
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+                if (keyInfo.Key == ConsoleKey.Escape)
+                    exit = true;
+                Console.CursorVisible = false;
+            }
+        } // checked
 
         public void ShowAll()
         {
-            List<Term> rooms = handler.GetListTerm();
-            foreach (var room in rooms)
-                Console.WriteLine(room.ID + "|" + room.Name + "|" + room.CreditNum);
-        }
+            bool exit = false;
+            while (!exit)
+            {
+                Console.Clear();
+                List<Term> rooms = this.teacher.Role == (int)UserPermission.HeadSection ? handler.GetList(this.teacher.SubjectID) : handler.GetListTerm();
+                PrintTable(rooms);
+                Console.WriteLine("bấm enter để thoát");
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+                if (keyInfo.Key == ConsoleKey.Enter)
+                    exit = true;
+            }
+        } // checked
 
         public void Show()
         {
-            int length;
-            int maxLength = handler.GetListTerm().Count;
-            while (true)
-            {
-                Console.Write("Số lượng học phần muốn hiển thị");
-                try
-                {
-                    length = int.Parse(Console.ReadLine());
-                    if (length > 0 && length <= maxLength)
-                        break;
-                    else
-                        Console.WriteLine("Số lượng học phần là số không âm");
-                }
-                catch
-                {
-                    Console.WriteLine("Số lượng học phần là 1 số");
-                }
-            }
-            List<Term> rooms = handler.GetListTerm(length);
-            foreach (var room in rooms)
-                Console.WriteLine(room.ID + "|" + room.Name + "|" + room.CreditNum);
+        } // checked
+
+        public void PrintTable(List<Term> terms)
+        {
+            Console.Clear();
+            List<Subject> subjects = subjectHandler.GetSubjects();
+            Table table = new Table(100);
+            table.PrintLine();
+            table.PrintRow("ID", "Ten HP", "so tin chi", "bo mon");
+            table.PrintLine();
+            foreach (var room in terms)
+                table.PrintRow(
+                    room.ID,
+                    room.Name,
+                    room.CreditNum.ToString(),
+                    subjects[subjectHandler.GetSubIndex(room.SubjectId)].Name
+                );
+            table.PrintLine();
         }
+
     }
 }

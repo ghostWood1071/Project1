@@ -15,5 +15,29 @@ namespace Project1.Source
         public static string CLASS_DB_NAME = "class.txt";
         public static string TERM_DB_NAME = "term.txt";
         public static string ASSIGNMENT_DB_NAME = "assignment.txt";
+        public static string DEFAULT_PASSWORD = "0123";
     }
+
+    enum UserPermission{
+        Admin  = 0,
+        HeadSection = 1,
+        Normal = 2
+    }
+
+    enum TeacherPosition
+    {
+        Dean,
+        DeanAssist,
+        HeadSection,
+        HeadSectionAsist,
+        Teacher,
+        Ministry
+    }
+
+    class NumberValue
+    {
+        public static float StandardTime = 250.0f;
+        public static int CreditNumPerSubject = 20;
+    }
+
 }

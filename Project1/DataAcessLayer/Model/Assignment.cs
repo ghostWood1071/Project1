@@ -14,26 +14,32 @@ namespace Project1.DataAcessLayer.Model
         private string classId;
         private string teacherId;
         private string termId;
+        private int semester;
+        private string year;
 
         public Assignment()
         {
 
         }
 
-        public Assignment(string id, string classId, string teacherId, string termId)
+        public Assignment(string id, string classId, string teacherId, string termId, int semester, string year)
         {
             this.id = id;
             this.classId = classId;
             this.teacherId = teacherId;
             this.termId = termId;
+            this.year = year;
+            this.semester = semester;
         }
 
-        public Assignment(string classId, string teacherId, string termId)
+        public Assignment(string classId, string teacherId, string termId, int semester)
         {
             this.classId = classId;
             this.teacherId = teacherId;
             this.termId = termId;
-            this.id = CreateID();
+            this.id = CreateID(); 
+            this.year = DateTime.Now.Year + "-" + (DateTime.Now.Year + 1);
+            this.semester = semester;
         }
 
         public string ID
@@ -69,6 +75,9 @@ namespace Project1.DataAcessLayer.Model
                 this.id = CreateID();
             }
         }
+
+        public int Semester { get => semester; set => semester = value; }
+        public string Year { get => year; set => year = value; }
 
         private string CreateID()
         {

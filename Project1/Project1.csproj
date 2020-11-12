@@ -46,39 +46,51 @@
     <Compile Include="DataAcessLayer\DataAcess\AssignmentDA.cs" />
     <Compile Include="DataAcessLayer\DataAcess\ClassDA.cs" />
     <Compile Include="DataAcessLayer\DataAcess\MajorDA.cs" />
-    <Compile Include="DataAcessLayer\DataAcess\RoomDA.cs" />
     <Compile Include="DataAcessLayer\DataAcess\SubjectDA.cs" />
     <Compile Include="DataAcessLayer\DataAcess\TeacherDA.cs" />
     <Compile Include="DataAcessLayer\DataAcess\TermDA.cs" />
+    <Compile Include="DataAcessLayer\DataAcess\UserDA.cs" />
     <Compile Include="DataAcessLayer\Model\Assignment.cs" />
     <Compile Include="DataAcessLayer\Model\Class.cs" />
+    <Compile Include="DataAcessLayer\Model\Interface\ICRUD.cs" />
+    <Compile Include="DataAcessLayer\Model\Interface\IUIable.cs" />
+    <Compile Include="DataAcessLayer\Model\Interface\IUserable.cs" />
     <Compile Include="DataAcessLayer\Model\Major.cs" />
-    <Compile Include="DataAcessLayer\Model\Room.cs" />
     <Compile Include="DataAcessLayer\Model\Schedule.cs" />
     <Compile Include="DataAcessLayer\Model\Subject.cs" />
     <Compile Include="DataAcessLayer\Model\Term.cs" />
     <Compile Include="DataAcessLayer\Model\Teacher.cs" />
+    <Compile Include="DataAcessLayer\Model\User.cs" />
     <Compile Include="LogicalHandlerLayer\AssignmentHandler.cs" />
     <Compile Include="LogicalHandlerLayer\ClassHandler.cs" />
+    <Compile Include="LogicalHandlerLayer\LoginHandler.cs" />
     <Compile Include="LogicalHandlerLayer\MajorHandler.cs" />
-    <Compile Include="LogicalHandlerLayer\RoomHandler.cs" />
     <Compile Include="LogicalHandlerLayer\SubjectHandler.cs" />
     <Compile Include="LogicalHandlerLayer\TeacherHandler.cs" />
     <Compile Include="LogicalHandlerLayer\TermsHandler.cs" />
+    <Compile Include="LogicalHandlerLayer\UserHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\StringSource.cs" />
+    <Compile Include="UI\AdminUI.cs" />
     <Compile Include="UI\AssignmentUI.cs" />
     <Compile Include="UI\ClassUI.cs" />
+    <Compile Include="UI\Component\MenuSelector.cs" />
+    <Compile Include="UI\Component\MessageBox.cs" />
+    <Compile Include="UI\Component\Table.cs" />
+    <Compile Include="UI\HeadSectionUI.cs" />
+    <Compile Include="UI\LoginUI.cs" />
     <Compile Include="UI\MajorUI.cs" />
-    <Compile Include="UI\RoomUI.cs" />
     <Compile Include="UI\SubjectUI.cs" />
     <Compile Include="UI\TeacherUI.cs" />
-    <Compile Include="UI\TermHandler.cs" />
     <Compile Include="UI\TermUI.cs" />
+    <Compile Include="UI\UserUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Ultilities\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

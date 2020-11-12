@@ -2,17 +2,14 @@
 using Project1.DataAcessLayer.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Project1.LogicalHandlerLayer
 {
     class SubjectHandler
     {
         SubjectDA subjectDA = new SubjectDA();
+
         public List<Subject> GetSubjects()
         {
             return subjectDA.GetSubjectList();
@@ -70,6 +67,16 @@ namespace Project1.LogicalHandlerLayer
                     return true;
             }
             return false;
+        }
+
+        public Subject GetSubject(string id, List<Subject> subjects)
+        {
+            foreach(var sub in subjects)
+            {
+                if (sub.ID == id)
+                    return sub;
+            }
+            return null;
         }
 
     }
