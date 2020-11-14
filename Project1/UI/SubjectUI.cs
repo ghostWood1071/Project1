@@ -5,6 +5,7 @@ using Project1.UI.Component;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,27 +35,27 @@ namespace Project1.UI
                 int mode = menuSelector.Selector();
                     switch (mode)
                     {
-                        case 1:
+                        case 0:
                             Add();
                             Console.Clear();
                             break;
-                        case 2:
+                        case 1:
                             Update();
                             Console.Clear();
                             break;
-                        case 3:
+                        case 2:
                             Delete();
                             Console.Clear();
                             break;
-                        case 4:
+                        case 3:
                             Show();
                             Console.Clear();
                             break;
-                        case 5:
+                        case 4:
                             Search();
                             Console.Clear();
                             break;
-                        case 6:
+                        case 5:
                             exit = true;
                             Console.Clear();
                             break;
@@ -65,14 +66,25 @@ namespace Project1.UI
 
         public void Add()
         {
+            List<Subject> subjects = handler.GetSubjects();
             bool exit = false;
             while (!exit)
             {
-                handler.AddSubject(new Subject(GetId(), GetName()));
-                Console.Write("Bạn có muốn nhập tiếp không?(y/n): ");
-                string exitStr = Console.ReadLine();
-                if (exitStr == "n")
+                Console.Clear();
+                Console.CursorVisible = true;
+                PrintTable(subjects);
+                Subject subject = new Subject(GetId(), GetName());
+                handler.AddSubject(subject);
+                subjects.Add(subject);
+                Console.Clear();
+                PrintTable(subjects);
+                Console.Write("Bạn có muốn nhập tiếp không?(esc để thoát)");
+                ConsoleKeyInfo exitStr = Console.ReadKey();
+                if (exitStr.Key == ConsoleKey.Escape)
+                {
+                    Console.CursorVisible = false;
                     exit = true;
+                }
             }
         }
 
@@ -127,49 +139,122 @@ namespace Project1.UI
 
         public void Update()
         {
-            List<Subject> subjects = handler.GetSubjects();
-            string id = GetId2();
-            string name = GetName(true);
-            int index = handler.GetSubIndex(id);
-            Subject newInfo = new Subject();
-            Subject oldInfo = subjects[index];
+            bool exit = false;
+            while (!exit)
+            {
+                Console.Clear();
+                Console.CursorVisible = true;
+                List<Subject> subjects = handler.GetSubjects();
+                PrintTable(subjects);
+                string id = GetId2();
+                string name = GetName(true);
+                int index = handler.GetSubIndex(id);
+                Subject newInfo = new Subject();
+                Subject oldInfo = subjects[index];
 
-            newInfo.ID = id;
+                newInfo.ID = id;
 
-            if (name == "")
-                newInfo.Name = oldInfo.Name;
-            else
-                newInfo.Name = name;
+                if (name == "")
+                    newInfo.Name = oldInfo.Name;
+                else
+                    newInfo.Name = name;
 
-            handler.UpdateSubject(id, newInfo);
+                handler.UpdateSubject(id, newInfo);
+                subjects[handler.GetSubIndex(id, subjects)] = newInfo;
+                Console.Clear();
+                PrintTable(subjects);
+                Console.Write("Bạn có muốn nhập tiếp không?(esc để thoát)");
+                ConsoleKeyInfo exitStr = Console.ReadKey();
+                if (exitStr.Key == ConsoleKey.Escape)
+                {
+                    Console.CursorVisible = false;
+                    exit = true;
+                }
+            }
+
         }
 
         public void Delete()
         {
-            string id = GetId2();
-            handler.DeleteSubject(id);
+            bool exit = false;
+            List<Subject> subjects = handler.GetSubjects();
+            while (!exit)
+            {
+                Console.Clear();
+                Console.CursorVisible = true;
+                PrintTable(subjects);
+                string id = GetId2();
+                handler.DeleteSubject(id);
+                subjects.RemoveAt(handler.GetSubIndex(id, subjects));
+                Console.Clear();
+                PrintTable(subjects);
+                Console.Write("Bạn có muốn nhập tiếp không?(esc để thoát)");
+                ConsoleKeyInfo exitStr = Console.ReadKey();
+                if (exitStr.Key == ConsoleKey.Escape)
+                {
+                    Console.CursorVisible = false;
+                    exit = true;
+                }
+
+            }
         }
 
         public void Search()
         {
-            Console.Write("Từ khóa: ");
-            string input = Console.ReadLine();
+            bool exit = false;
             List<Subject> subjects = handler.GetSubjects();
-            foreach (var sub in subjects)
-                if (sub.ID.ToLower().Contains(input) || sub.Name.ToLower().Contains(input))
-                    Console.WriteLine(sub.ID + "|" + sub.Name);
+            while (!exit)
+            {
+                Console.Clear();
+                Console.CursorVisible = true;
+                Console.Write("Từ khóa: ");
+                string input = Console.ReadLine();
+                List<Subject> result = new List<Subject>();
+                foreach (var sub in subjects)
+                    if (sub.ID.ToLower().Contains(input) || sub.Name.ToLower().Contains(input))
+                        result.Add(sub);
+                Console.Clear();
+                PrintTable(subjects);
+                Console.Write("Bạn có muốn nhập tiếp không?(esc để thoát)");
+                ConsoleKeyInfo exitStr = Console.ReadKey();
+                if (exitStr.Key == ConsoleKey.Escape)
+                {
+                    Console.CursorVisible = false;
+                    exit = true;
+                }
+            }
         }
 
         public void Show()
         {
             List<Subject> subjects = handler.GetSubjects();
-            foreach (var sub in subjects)
-                    Console.WriteLine(sub.ID + "|" + sub.Name);
+            bool exit = false;
+            while (!exit)
+            {
+                Console.Clear();
+                PrintTable(subjects);
+                Console.Write("Bạn có muốn nhập tiếp không?(esc để thoát)");
+                ConsoleKeyInfo exitStr = Console.ReadKey();
+                if (exitStr.Key == ConsoleKey.Escape)
+                {
+                    Console.CursorVisible = false;
+                    exit = true;
+                }
+            }
         }
 
         public void PrintTable(List<Subject> subjecs)
         {
-
+            Console.Clear();
+            Table table = new Table(90);
+            table.PrintLine();
+            table.PrintRow("ID","Tên bộ môn");
+            table.PrintLine();
+            foreach(var sub in subjecs)
+            {
+                table.PrintRow(sub.ID, sub.Name);
+            }
+            table.PrintLine();
         }
     }
 }

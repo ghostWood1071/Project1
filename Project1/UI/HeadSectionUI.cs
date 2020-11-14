@@ -31,6 +31,7 @@ namespace Project1.UI
                 "2.Quản lý lớp",
                 "3.Quản lý học phần",
                 "4.Quản lý giảng viên",
+                "5.Quản lý chuyên ngành",
                 "5.Đổi mật khẩu",
                 "6.Dang Xuat"
             };
@@ -69,7 +70,8 @@ namespace Project1.UI
                 case 1: return new ClassUI(teacher);
                 case 2: return new TermUI(teacher);
                 case 3: return new TeacherUI(teacher);
-                case 4: return new UserUI(teacher);
+                case 4: return new MajorUI(teacher);
+                case 5: return new UserUI(teacher);
                 default: return new LoginUI();
             }
         }

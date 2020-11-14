@@ -45,6 +45,16 @@ namespace Project1.LogicalHandlerLayer
             return subjectDA.GetSubIndex(id);
         }
 
+        public int GetSubIndex(string id, List<Subject> subjects)
+        {
+            for(int i = 0; i<subjects.Count; i++)
+            {
+                if (subjects[i].ID == id)
+                    return i;
+            }
+            return -1;
+        }
+
         public bool CheckIdSyntax(string id)
         {
             if (id.Length == 2)

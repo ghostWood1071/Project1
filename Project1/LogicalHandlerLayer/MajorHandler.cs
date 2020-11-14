@@ -61,6 +61,16 @@ namespace Project1.LogicalHandlerLayer
             return majorDA.GetMajorIndex(id);
         }
 
+        public int GetIndex(string id, List<Major> majors)
+        {
+            for(int i = 0; i<majors.Count; i++)
+            {
+                if (majors[i].ID == id)
+                    return i;
+            }
+            return -1;
+        }
+
         public bool CheckId(string id)
         {
             return handler.CheckIdSyntax(id);
@@ -70,6 +80,8 @@ namespace Project1.LogicalHandlerLayer
         {
             return handler.CheckName(name);
         }
+
+        
 
     }
 }

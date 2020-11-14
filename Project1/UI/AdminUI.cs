@@ -58,7 +58,7 @@ namespace Project1.UI
             Console.WriteLine("Chuc vu: ");
         }
 
-        public IUIable GetUI(int mode)
+        public IUIable GetUI(int mode) // remove this part to bussin
         {
             TeacherHandler handler = new TeacherHandler();
             Teacher teacher = handler.GetInfor(user.Account);
@@ -70,7 +70,7 @@ namespace Project1.UI
                 case 1: return new UserUI(teacher);
                 case 2: return new ClassUI(teacher);
                 case 3: return new SubjectUI();
-                case 4: return new MajorUI();
+                case 4: return new MajorUI(teacher);
                 case 5: return new TermUI(teacher);
                 default: return new LoginUI();
             }
